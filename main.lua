@@ -5,7 +5,7 @@ require "planets"
 
 local gameWidth, gameHeight = 400, 400 --fixed game resolution
 local windowWidth, windowHeight = 800, 800
-local Accel = 10
+local Thrust = 1
 local Speed = 20
 local CameraIndex = 1
 local ZoomFactor = 1
@@ -167,9 +167,9 @@ function ProcessKeyboard(dt)
     end
 
     if love.keyboard.isDown("down") then
-        Player.velocity = Player.velocity + vector(0, 1):rotated(Player.direction)
+        Player.velocity = Player.velocity + vector(0, Thrust):rotated(Player.direction)
     elseif love.keyboard.isDown("up") then
-        Player.velocity = Player.velocity + vector(0, -1):rotated(Player.direction)
+        Player.velocity = Player.velocity + vector(0, -Thrust):rotated(Player.direction)
     end
 
 end
