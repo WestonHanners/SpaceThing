@@ -1,0 +1,7 @@
+{
+    "Lua.diagnostics.globals": [
+        "love"
+    ],
+    "pixelbyte.love2d.debug": true,
+    "Lua.runtime.version": "Lua 5.1"
+}
