@@ -2,6 +2,7 @@ local push = require "push"
 local vector = require "vector"
 require "physics"
 require "planets"
+require "stars"
 
 local gameWidth, gameHeight = 400, 400 --fixed game resolution
 local windowWidth, windowHeight = 800, 800
@@ -54,6 +55,7 @@ local Bodies = {
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    LoadStars()
     push:setupScreen(gameWidth, gameHeight, windowWidth, windowHeight, {
         pixelperfect = true,
         fullscreen = false,
@@ -70,6 +72,7 @@ function love.draw()
 
     LockCamera(Bodies[CameraIndex])
 
+    DrawStars()
     for i = 1, #Bodies do
         local body = Bodies[i]
         body:draw()
