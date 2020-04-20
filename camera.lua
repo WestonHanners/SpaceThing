@@ -4,6 +4,7 @@ Camera.y = 0
 Camera.scaleX = 1
 Camera.scaleY = 1
 Camera.rotation = 0
+Camera.layers = {}
 
 Camera.width = 800
 Camera.height = 800
@@ -42,4 +43,21 @@ end
 function Camera:setScale(sx, sy)
     self.scaleX = sx or self.scaleX
     self.scaleY = sy or self.scaleY
+end
+
+function Camera:newLayer(scale, func)
+    table.insert(self.layers, { draw = func, scale = scale })
+    table.sort(self.layers, function(a, b) return a.scale < b.scale end)
+end
+
+function Camera:draw()
+    local bx, by = self.x, self.y
+
+    for _, v in ipairs(self.layers) do
+        self.x = bx * v.scale
+        self.y = by * v.scale
+        Camera:set()
+        v.draw()
+        Camera:unset()
+    end
 end

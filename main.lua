@@ -55,8 +55,6 @@ local Bodies = {
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    LoadStars()
-
     Camera.width = gameWidth
     Camera.height = gameHeight
 
@@ -67,22 +65,26 @@ function love.load()
         vsync = true,
         resizable = true
     })
+
+    Camera:newLayer(1, function()
+        for i = 1, #Bodies do
+            local body = Bodies[i]
+            body:draw()
+        end
+    end)
+
+    LoadStars()
+    Camera:newLayer(0.5, function()
+        DrawStars()
+    end)
+
 end
 
 function love.draw()
 
     push:start()
-    Camera:set()
     LockCamera(Bodies[CameraIndex])
-
-    DrawStars()
-
-    for i = 1, #Bodies do
-        local body = Bodies[i]
-        body:draw()
-    end
-
-    Camera:unset()
+    Camera:draw()
     push:finish()
 
 end
@@ -102,8 +104,6 @@ function love.update(dt)
 
     ProcessKeyboard(dt)
 
-    -- ProcessCollision(dt)
-
     for i = 1, #Bodies do
         local body = Bodies[i]
         CalculateOrbitFor(body, Bodies, dt)
@@ -114,24 +114,6 @@ function love.update(dt)
         body:update(dt)
     end
 
-end
-
-function ProcessCollision(dt)
-    if Player.position.x >= gameWidth - 10 then
-        Player.velocity.x = -Player.velocity.x
-    end
-
-    if Player.position.x <= 0 + 10 then
-        Player.velocity.x = -Player.velocity.x
-    end
-
-    if Player.position.y >= gameHeight - 10 then
-        Player.velocity.y = -Player.velocity.y
-    end
-
-    if Player.position.y <= 0 + 10 then
-        Player.velocity.y = -Player.velocity.y
-    end
 end
 
 function love.keypressed(key)
