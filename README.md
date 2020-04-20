@@ -1,5 +1,7 @@
 # SpaceThing
 
+![Screenshot](https://github.com/WestonHanners/SpaceThing/blob/master/doc/screenshot.png)
+
 Made with [Love2d](https://love2d.org/)
 
 Based on this episode of [Coding Adventures](https://www.youtube.com/watch?v=7axImc1sxa0&t=83s)
