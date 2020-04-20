@@ -1,13 +1,16 @@
-local push = require "vendor/push"
-local vector = require "vendor/vector"
-local config = require "config"
-
 require "src/physics"
 require "src/planets"
 require "src/stars"
 require "src/camera"
 require "src/player"
 require "src/debug"
+
+local push = require "vendor/push"
+local vector = require "vendor/vector"
+local config = require "config"
+
+local ZoomFactor = 1
+local CameraIndex = 1
 
 local Bodies = {
     Player, Sun, Earth, SmallPlanet, Moon, LargePlanet
@@ -50,7 +53,9 @@ end
 function love.draw()
 
     push:start()
-    LockCamera(Bodies[config.CameraIndex])
+
+    LockCamera(Bodies[CameraIndex])
+
     Camera:draw()
 
     if DEBUG == true then
@@ -63,7 +68,7 @@ end
 
 function LockCamera(Body)
 
-    Camera:setScale(1 / config.ZoomFactor, 1 / config.ZoomFactor)
+    Camera:setScale(1 / ZoomFactor, 1 / ZoomFactor)
     Camera:setPosition(Body.position)
 
 end
@@ -91,17 +96,17 @@ end
 function love.keypressed(key)
 
     if key == "c" then
-        if config.CameraIndex + 1 > #Bodies then
-            config.CameraIndex = 1
+        if CameraIndex + 1 > #Bodies then
+            CameraIndex = 1
         else
-            config.CameraIndex = config.CameraIndex + 1
+            CameraIndex = CameraIndex + 1
         end
     end
 
     if key == "w" then
-        config.ZoomFactor = config.ZoomFactor + 0.1
+        ZoomFactor = ZoomFactor + 0.1
     elseif key == "s" then
-        config.ZoomFactor = config.ZoomFactor - 0.1
+        ZoomFactor = ZoomFactor - 0.1
     end
 
     if key == "a" then
@@ -124,15 +129,19 @@ end
 function ProcessKeyboard(dt)
 
     if love.keyboard.isDown("left") then
-        Player.direction = (Player.direction - (math.rad(180) * dt))
+        Player:rotateLeft(dt)
     elseif love.keyboard.isDown("right") then
-        Player.direction = (Player.direction + (math.rad(180) * dt))
+        Player:rotateRight(dt)
     end
 
     if love.keyboard.isDown("down") then
-        Player.velocity = Player.velocity + vector(0, config.Thrust):rotated(Player.direction)
+        Player.thrusting = true
+        Player:thrustReverse(dt)
     elseif love.keyboard.isDown("up") then
-        Player.velocity = Player.velocity + vector(0, -config.Thrust):rotated(Player.direction)
+        Player.thrusting = true
+        Player:thrustForward(dt)
+    else
+        Player.thrusting = false
     end
 
 end

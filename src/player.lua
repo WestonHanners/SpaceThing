@@ -1,5 +1,13 @@
 local vector = require "../vendor/vector"
 
+local Thrust = 40
+local StartingFuel = 10
+local FuelRate = 2
+
+local function spendFuel(dt)
+    Player.fuel = Player.fuel - (FuelRate * dt)
+end
+
 Player = {
     name = "Player",
     position = vector(300,300),
@@ -8,6 +16,8 @@ Player = {
     image = love.graphics.newImage("gfx/ship.png"),
     direction = 0,
     velocityLocked = false,
+    thrusting = false,
+    fuel = StartingFuel,
 
     draw = function(self)
         love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -31,5 +41,29 @@ Player = {
         end
 
         self.position = self.position + self.velocity * dt
-    end
+    end,
+
+    thrustForward = function(self, dt)
+        if self.fuel <= 0 then
+            return
+        end
+        spendFuel(dt)
+        self.velocity = self.velocity + vector(0, -Thrust * dt):rotated(self.direction)
+    end,
+
+    thrustReverse = function(self, dt)
+        if self.fuel <= 0 then
+            return
+        end
+        spendFuel(dt)
+        self.velocity = self.velocity + vector(0, Thrust * dt):rotated(self.direction)
+    end,
+
+    rotateLeft = function(self, dt)
+        self.direction = (self.direction - (math.rad(180) * dt))
+    end,
+
+    rotateRight = function(self, dt)
+        self.direction = (self.direction + (math.rad(180) * dt))
+    end,
 }
