@@ -3,11 +3,11 @@ require "src/planets"
 require "src/stars"
 require "src/camera"
 require "src/player"
-require "src/debug"
+require "src/display"
+require "config"
 
 local push = require "vendor/push"
 local vector = require "vendor/vector"
-local config = require "config"
 
 local ZoomFactor = 1
 local CameraIndex = 1
@@ -19,15 +19,15 @@ local Bodies = {
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    Camera.width = config.gameWidth
-    Camera.height = config.gameHeight
+    Camera.width = Config.gameWidth
+    Camera.height = Config.gameHeight
 
-    love.window.setTitle(config.TITLE)
+    love.window.setTitle(Config.TITLE)
 
-    push:setupScreen(config.gameWidth, 
-                     config.gameHeight,
-                     config.windowWidth, 
-                     config.windowHeight, {
+    push:setupScreen(Config.gameWidth, 
+                     Config.gameHeight,
+                     Config.windowWidth, 
+                     Config.windowHeight, {
         pixelperfect = true,
         fullscreen = false,
         stretched = false,
@@ -58,7 +58,7 @@ function love.draw()
 
     Camera:draw()
 
-    if DEBUG == true then
+    if Config.DISPLAY == true then
         DrawInfo(Bodies)
     end
 
@@ -75,7 +75,7 @@ end
 
 function love.update(dt)
 
-    if PAUSE == true then
+    if Config.PAUSE == true then
         return
     end
 
@@ -114,11 +114,11 @@ function love.keypressed(key)
     end
 
     if key == "p" then
-        PAUSE = not PAUSE
+        Config.PAUSE = not Config.PAUSE
     end
 
     if key == "d" then
-        DEBUG = not DEBUG
+        Config.DISPLAY = not Config.DISPLAY
     end
 
     if key == "escape" then

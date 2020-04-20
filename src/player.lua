@@ -1,3 +1,5 @@
+require "../config"
+
 local vector = require "../vendor/vector"
 
 local Thrust = 40
@@ -25,7 +27,7 @@ Player = {
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(self.image, self.position.x, self.position.y, self.direction, 1, 1, 31 * 0.5, 31 * 0.5)
 
-        if DEBUG == true then
+        if Config.DISPLAY == true then
             local drawVector = (self.position + self.velocity)
             love.graphics.setColor(1,0,0)
             love.graphics.line(self.position.x, self.position.y, drawVector.x + 10, drawVector.y + 10)

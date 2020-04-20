@@ -23,21 +23,21 @@ function DrawInfo(Bodies)
         love.graphics.setColor(1, 0.4, 0.4)
     end
     
-    local info = love.graphics.newText(font, "Fuel Remaining: " .. Round(Player.fuel))
-    love.graphics.draw(info, 10, finalPos)
+    local fuel = love.graphics.newText(font, "Fuel Remaining: " .. Round(Player.fuel))
+    love.graphics.draw(fuel, 10, finalPos)
 
     if Player.velocityLocked == true then
         finalPos = finalPos + 20
         love.graphics.setColor(1, 0.4, 0.4)
-        local info = love.graphics.newText(font, "Attitude Assist Active")
-        love.graphics.draw(info, 10, finalPos)
+        local sas = love.graphics.newText(font, "Attitude Assist Active")
+        love.graphics.draw(sas, 10, finalPos)
     end
 
     if Player.thrusting == true then
         finalPos = finalPos + 20
         love.graphics.setColor(1, 0.4, 0.4)
-        local info = love.graphics.newText(font, "Thrusting")
-        love.graphics.draw(info, 10, finalPos)
+        local thrust = love.graphics.newText(font, "Thrusting")
+        love.graphics.draw(thrust, 10, finalPos)
     end
 
 end
