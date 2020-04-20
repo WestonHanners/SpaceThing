@@ -1,7 +1,7 @@
 local vector = require "../vendor/vector"
 
 local Thrust = 40
-local StartingFuel = 10
+local StartingFuel = 500
 local FuelRate = 2
 
 local function spendFuel(dt)
