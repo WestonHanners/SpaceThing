@@ -1,53 +1,13 @@
-local push = require "push"
-local vector = require "vector"
+local push = require "vendor/push"
+local vector = require "vendor/vector"
+local config = require "config"
 
-require "physics"
-require "planets"
-require "stars"
-require "camera"
-
-local gameWidth, gameHeight = 800, 800 --fixed game resolution
-local windowWidth, windowHeight = 800, 800
-local Thrust = 1
-local Speed = 20
-local CameraIndex = 1
-local ZoomFactor = 1
-local pause = false
-local DEBUG = false
-
-Player = {
-    name = "Player",
-    position = vector(300,300),
-    velocity = vector(0, 0),
-    mass = 0.0001,
-    image = love.graphics.newImage("gfx/ship.png"),
-    direction = 0,
-    velocityLocked = false,
-
-    draw = function(self)
-        love.graphics.setDefaultFilter('nearest', 'nearest')
-
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.draw(self.image, self.position.x, self.position.y, self.direction, 1, 1, 31 * 0.5, 31 * 0.5)
-
-        if DEBUG == true then
-            local drawVector = (self.position + self.velocity)
-            love.graphics.setColor(1,0,0)
-            love.graphics.line(self.position.x, self.position.y, drawVector.x + 10, drawVector.y + 10)
-        end
-
-    end,
-
-    update = function(self, dt)
-
-        -- Handle Reaction Wheels
-        if self.velocityLocked == true then
-            self.direction = self.position.angleTo(self.velocity) + math.rad(90)
-        end
-
-        self.position = self.position + self.velocity * dt
-    end
-}
+require "src/physics"
+require "src/planets"
+require "src/stars"
+require "src/camera"
+require "src/player"
+require "src/debug"
 
 local Bodies = {
     Player, Sun, Earth, SmallPlanet, Moon, LargePlanet
@@ -56,10 +16,15 @@ local Bodies = {
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    Camera.width = gameWidth
-    Camera.height = gameHeight
+    Camera.width = config.gameWidth
+    Camera.height = config.gameHeight
 
-    push:setupScreen(gameWidth, gameHeight, windowWidth, windowHeight, {
+    love.window.setTitle(config.TITLE)
+
+    push:setupScreen(config.gameWidth, 
+                     config.gameHeight,
+                     config.windowWidth, 
+                     config.windowHeight, {
         pixelperfect = true,
         fullscreen = false,
         stretched = false,
@@ -75,6 +40,7 @@ function love.load()
     end)
 
     LoadStars()
+
     Camera:newLayer(0.5, function()
         DrawStars()
     end)
@@ -84,7 +50,7 @@ end
 function love.draw()
 
     push:start()
-    LockCamera(Bodies[CameraIndex])
+    LockCamera(Bodies[config.CameraIndex])
     Camera:draw()
 
     if DEBUG == true then
@@ -97,14 +63,14 @@ end
 
 function LockCamera(Body)
 
-    Camera:setScale(1 / ZoomFactor, 1 / ZoomFactor)
+    Camera:setScale(1 / config.ZoomFactor, 1 / config.ZoomFactor)
     Camera:setPosition(Body.position)
 
 end
 
 function love.update(dt)
 
-    if pause == true then
+    if PAUSE == true then
         return
     end
 
@@ -125,17 +91,17 @@ end
 function love.keypressed(key)
 
     if key == "c" then
-        if CameraIndex + 1 > #Bodies then
-            CameraIndex = 1
+        if config.CameraIndex + 1 > #Bodies then
+            config.CameraIndex = 1
         else
-            CameraIndex = CameraIndex + 1
+            config.CameraIndex = config.CameraIndex + 1
         end
     end
 
     if key == "w" then
-        ZoomFactor = ZoomFactor + 0.1
+        config.ZoomFactor = config.ZoomFactor + 0.1
     elseif key == "s" then
-        ZoomFactor = ZoomFactor - 0.1
+        config.ZoomFactor = config.ZoomFactor - 0.1
     end
 
     if key == "a" then
@@ -143,7 +109,7 @@ function love.keypressed(key)
     end
 
     if key == "p" then
-        pause = not pause
+        PAUSE = not PAUSE
     end
 
     if key == "d" then
@@ -164,34 +130,9 @@ function ProcessKeyboard(dt)
     end
 
     if love.keyboard.isDown("down") then
-        Player.velocity = Player.velocity + vector(0, Thrust):rotated(Player.direction)
+        Player.velocity = Player.velocity + vector(0, config.Thrust):rotated(Player.direction)
     elseif love.keyboard.isDown("up") then
-        Player.velocity = Player.velocity + vector(0, -Thrust):rotated(Player.direction)
+        Player.velocity = Player.velocity + vector(0, -config.Thrust):rotated(Player.direction)
     end
 
-end
-
-
-function Round(x)
-    return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
-end
-
-function DrawInfo(Bodies)
-    local font = love.graphics.newFont("fonts/Hack-Bold.ttf", 15)
-    love.graphics.setColor(1, 1, 1)
-
-    local finalPos = 0
-
-    for i = 1, #Bodies do
-        local body = Bodies[i]
-        local info = love.graphics.newText(font, body.name .. ": " .. Round(body.position:dist(Sun.position)))
-        love.graphics.draw(info, 10, i * 20)
-        finalPos = i * 20
-    end
-
-    if Player.velocityLocked == true then
-        love.graphics.setColor(1, 0.4, 0.4)
-        local info = love.graphics.newText(font, "Attitude Assist Active")
-        love.graphics.draw(info, 10, finalPos + 20)
-    end
 end

@@ -1,4 +1,4 @@
-local vector = require "vector"
+local vector = require "../vendor/vector"
 
 Earth = {
     name = "Earth",
