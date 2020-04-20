@@ -1,6 +1,7 @@
 local vector = require "vector"
 
 Earth = {
+    name = "Earth",
     position = vector(500, 50),
     velocity = vector(63.75, 0),
     mass = 150.0,
@@ -14,6 +15,7 @@ Earth = {
 }
 
 SmallPlanet = {
+    name = "Mercury",
     position = vector(500, 240),
     velocity = vector(58, 0),
     mass = 0.25,
@@ -27,6 +29,7 @@ SmallPlanet = {
 }
 
 Moon = {
+    name = "Moon",
     position = vector(500, 64),
     velocity = vector(72, 0),
     mass = 0.0015,
@@ -40,12 +43,27 @@ Moon = {
 }
 
 Sun = {
+    name = "Sun",
     position = vector(500, 500),
     velocity = vector(0, 0),
     mass = 10000.0,
     draw = function(self)
         love.graphics.setColor(217/255, 224/255, 8/255)
-        love.graphics.circle("fill", self.position.x, self.position.y, 20)
+        love.graphics.circle("fill", self.position.x, self.position.y, 30)
+    end,
+    update = function(self, dt)
+        self.position = self.position + self.velocity * dt
+    end
+}
+
+LargePlanet = {
+    name = "Jupiter",
+    position = vector(500, -1000),
+    velocity = vector(48, 0),
+    mass = 600,
+    draw = function(self)
+        love.graphics.setColor(2/255, 253/255, 2/255)
+        love.graphics.circle("fill", self.position.x, self.position.y, 15)
     end,
     update = function(self, dt)
         self.position = self.position + self.velocity * dt
