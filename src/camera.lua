@@ -1,9 +1,11 @@
 Camera = {}
+
 Camera.x = 0
 Camera.y = 0
 Camera.scaleX = 1
 Camera.scaleY = 1
 Camera.rotation = 0
+
 Camera.layers = {}
 
 Camera.width = 800

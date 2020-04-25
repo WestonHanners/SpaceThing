@@ -1,4 +1,4 @@
-local GravityConstant = 0.4
+local GravityConstant = 1.5
 local Friction = 200
 
 function CalculateOrbitFor(planet, otherBodies, dt)

@@ -4,6 +4,8 @@ Config = {
     windowWidth = 800,
     windowHeight = 800,
     PAUSE = false,
-    DISPLAY = false,
+    DISPLAY = true,
+    FRAMEADVANCE = false,
+    STEP = false,
     TITLE = "Space Thing"
 }

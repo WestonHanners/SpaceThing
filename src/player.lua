@@ -2,7 +2,7 @@ require "../config"
 
 local vector = require "../vendor/vector"
 
-local Thrust = 40
+local Thrust = 60
 local StartingFuel = 500
 local FuelRate = 2
 
@@ -24,12 +24,12 @@ Player = {
     draw = function(self)
         love.graphics.setDefaultFilter('nearest', 'nearest')
 
-        love.graphics.setColor(1, 1, 1)
+        love.graphics.setColor(WhiteColor)
         love.graphics.draw(self.image, self.position.x, self.position.y, self.direction, 1, 1, 31 * 0.5, 31 * 0.5)
 
         if Config.DISPLAY == true then
             local drawVector = (self.position + self.velocity)
-            love.graphics.setColor(1,0,0)
+            love.graphics.setColor(RedColor)
             love.graphics.line(self.position.x, self.position.y, drawVector.x + 10, drawVector.y + 10)
         end
 

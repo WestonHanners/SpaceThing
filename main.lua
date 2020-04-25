@@ -7,13 +7,20 @@ require "src/display"
 require "config"
 
 local push = require "vendor/push"
-local vector = require "vendor/vector"
 
 local ZoomFactor = 1
 local CameraIndex = 1
 
 local Bodies = {
     Player, Sun, Earth, SmallPlanet, Moon, LargePlanet
+}
+
+local ForegroundLayer = {
+    Player, Sun, Earth, SmallPlanet, Moon, LargePlanet
+}
+
+local BackgroundLayer = {
+    StarField
 }
 
 function love.load()
@@ -36,16 +43,17 @@ function love.load()
     })
 
     Camera:newLayer(1, function()
-        for i = 1, #Bodies do
-            local body = Bodies[i]
-            body:draw()
+        for i = 1, #ForegroundLayer do
+            local drawable = ForegroundLayer[i]
+            drawable:draw(Camera)
         end
     end)
 
-    LoadStars()
-
-    Camera:newLayer(0.5, function()
-        DrawStars()
+    Camera:newLayer(0.8, function()
+        for i = 1, #BackgroundLayer do
+            local drawable = BackgroundLayer[i]
+            drawable:draw(Camera)
+        end
     end)
 
 end
@@ -75,11 +83,20 @@ end
 
 function love.update(dt)
 
+    ProcessKeyboard(dt)
+
+    if dt > 0.45 then
+        return
+    end
+
     if Config.PAUSE == true then
         return
     end
 
-    ProcessKeyboard(dt)
+    if Config.FRAMEADVANCE == true and Config.STEP == false then
+        return
+    end
+    Config.STEP = false
 
     for i = 1, #Bodies do
         local body = Bodies[i]
@@ -104,9 +121,9 @@ function love.keypressed(key)
     end
 
     if key == "w" then
-        ZoomFactor = ZoomFactor + 0.1
+        ZoomFactor = ZoomFactor * 0.8
     elseif key == "s" then
-        ZoomFactor = ZoomFactor - 0.1
+        ZoomFactor = ZoomFactor / 0.8
     end
 
     if key == "a" then
@@ -121,8 +138,16 @@ function love.keypressed(key)
         Config.DISPLAY = not Config.DISPLAY
     end
 
-    if key == "escape" then
+    if key == "q" then
         love.event.quit(0)
+    end
+
+    if key == "space" then
+        Config.STEP = true
+    end
+
+    if key == "o" then
+        Config.FRAMEADVANCE = not Config.FRAMEADVANCE
     end
 end
 
