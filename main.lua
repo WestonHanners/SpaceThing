@@ -1,27 +1,15 @@
 require "src/physics"
 require "src/planets"
+require "src/player"
 require "src/stars"
 require "src/camera"
-require "src/player"
 require "src/display"
+require "src/keyboard"
+require "src/layers"
+require "src/game"
 require "config"
 
 local push = require "vendor/push"
-
-local ZoomFactor = 1
-local CameraIndex = 1
-
-local Bodies = {
-    Player, Sun, Earth, SmallPlanet, Moon, LargePlanet
-}
-
-local ForegroundLayer = {
-    Player, Sun, Earth, SmallPlanet, Moon, LargePlanet
-}
-
-local BackgroundLayer = {
-    StarField
-}
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -62,7 +50,7 @@ function love.draw()
 
     push:start()
 
-    LockCamera(Bodies[CameraIndex])
+    Camera:lock(Bodies[Config.CameraIndex])
 
     Camera:draw()
 
@@ -70,14 +58,12 @@ function love.draw()
         DrawInfo(Bodies)
     end
 
+    if Game.gameover == true then
+        DrawAlert(Game.reason, RedColor)
+        Config.PAUSE = true
+    end
+
     push:finish()
-
-end
-
-function LockCamera(Body)
-
-    Camera:setScale(1 / ZoomFactor, 1 / ZoomFactor)
-    Camera:setPosition(Body.position)
 
 end
 
@@ -111,62 +97,9 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-
-    if key == "c" then
-        if CameraIndex + 1 > #Bodies then
-            CameraIndex = 1
-        else
-            CameraIndex = CameraIndex + 1
-        end
-    end
-
-    if key == "w" then
-        ZoomFactor = ZoomFactor * 0.8
-    elseif key == "s" then
-        ZoomFactor = ZoomFactor / 0.8
-    end
-
-    if key == "a" then
-        Player.velocityLocked = not Player.velocityLocked
-    end
-
-    if key == "p" then
-        Config.PAUSE = not Config.PAUSE
-    end
-
-    if key == "d" then
-        Config.DISPLAY = not Config.DISPLAY
-    end
-
-    if key == "q" then
-        love.event.quit(0)
-    end
-
-    if key == "space" then
-        Config.STEP = true
-    end
-
-    if key == "o" then
-        Config.FRAMEADVANCE = not Config.FRAMEADVANCE
-    end
+    ProcessInput(key)
 end
 
 function ProcessKeyboard(dt)
-
-    if love.keyboard.isDown("left") then
-        Player:rotateLeft(dt)
-    elseif love.keyboard.isDown("right") then
-        Player:rotateRight(dt)
-    end
-
-    if love.keyboard.isDown("down") then
-        Player.thrusting = true
-        Player:thrustReverse(dt)
-    elseif love.keyboard.isDown("up") then
-        Player.thrusting = true
-        Player:thrustForward(dt)
-    else
-        Player.thrusting = false
-    end
-
+    ProcessContinuousInput(dt)
 end

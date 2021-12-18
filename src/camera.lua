@@ -36,7 +36,7 @@ function Camera:scale(sx, sy)
     self.scaleX = self.scaleX * sx
     self.scaleY = self.scaleY * (sy or sx)
 end
-  
+
 function Camera:setPosition(vector)
     self.x = -vector.x + (Camera.width * 0.5) * Camera.scaleX or self.x
     self.y = -vector.y + (Camera.height * 0.5) * Camera.scaleY or self.y
@@ -63,3 +63,9 @@ function Camera:draw()
         Camera:unset()
     end
 end
+
+function Camera:lock(Body)
+    Camera:setScale(1 / Config.ZoomFactor, 1 / Config.ZoomFactor)
+    Camera:setPosition(Body.position)
+end
+  

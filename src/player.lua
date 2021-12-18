@@ -1,4 +1,5 @@
 require "../config"
+require "src/game"
 
 local vector = require "../vendor/vector"
 
@@ -36,6 +37,11 @@ Player = {
     end,
 
     update = function(self, dt)
+
+        if self.position:dist(Sun.position) > Game.lostDistance then
+            Game.reason = "Lost in space."
+            Game.gameover = true
+        end
 
         -- Handle Reaction Wheels
         if self.velocityLocked == true then

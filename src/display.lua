@@ -3,6 +3,7 @@ require "src/colors"
 local fontSize = 15
 local lineSpacing = 20
 local leftMargin = 10
+local font = love.graphics.newFont("fonts/Hack-Bold.ttf", fontSize)
 
 function DrawLine(text, color, top)
     love.graphics.setColor(color)
@@ -10,8 +11,17 @@ function DrawLine(text, color, top)
     return top + lineSpacing
 end
 
+function DrawAlert(text, color)
+    love.graphics.setColor(color)
+    alert = love.graphics.newText(font, text)
+
+    left = love.graphics.getWidth() * 0.5 - alert:getWidth() * 0.5
+    top = love.graphics.getHeight() * 0.5 + alert:getHeight() -- Display below the player sprite.
+
+    love.graphics.draw(alert, left, top) 
+end
+
 function DrawInfo(Bodies)
-    local font = love.graphics.newFont("fonts/Hack-Bold.ttf", fontSize)
     local textColor = WhiteColor
     local nextLine = lineSpacing
 
