@@ -1,11 +1,11 @@
 local vector = require "../vendor/vector"
 
 local SCALE = 4.0
-local ORIGIN = 500, 500
+local ORIGIN = { x = 500, y = 500 }
 
 Earth = {
     name = "Earth",
-    position = vector(ORIGIN, ORIGIN - 5000),
+    position = vector(ORIGIN.x, ORIGIN.y - 5000),
     velocity = vector(150, 0),
     mass = 150.0 * SCALE,
     draw = function(self, camera)
@@ -19,7 +19,7 @@ Earth = {
 
 SmallPlanet = {
     name = "Mercury",
-    position = vector(ORIGIN, ORIGIN - 1000),
+    position = vector(ORIGIN.x, ORIGIN.y - 1000),
     velocity = vector(250, 0),
     mass = 0.25 * SCALE,
     draw = function(self, camera)
@@ -33,7 +33,7 @@ SmallPlanet = {
 
 Moon = {
     name = "Moon",
-    position = vector(ORIGIN - 5000, ORIGIN - 5100),
+    position = vector(ORIGIN.x - 5000, ORIGIN.y - 5100),
     velocity = vector(155, 0),
     mass = 0.0015 * SCALE,
     draw = function(self, camera)
@@ -47,7 +47,7 @@ Moon = {
 
 Sun = {
     name = "Sun",
-    position = vector(ORIGIN, ORIGIN) * SCALE,
+    position = vector(ORIGIN.x, ORIGIN.y) * SCALE,
     velocity = vector(0, 0) * SCALE,
     mass = 10000.0 * SCALE,
     draw = function(self, camera)
@@ -61,7 +61,7 @@ Sun = {
 
 LargePlanet = {
     name = "Jupiter",
-    position = vector(ORIGIN, ORIGIN - 10000) * SCALE,
+    position = vector(ORIGIN.x, ORIGIN.y - 10000) * SCALE,
     velocity = vector(48, 0) * SCALE,
     mass = 600 * SCALE,
     draw = function(self, camera)
