@@ -43,12 +43,27 @@ Player = {
             Game.gameover = true
         end
 
+        self:checkCrash()
+
         -- Handle Reaction Wheels
         if self.velocityLocked == true then
             self.direction = self.position.angleTo(self.velocity) + math.rad(90)
         end
 
         self.position = self.position + self.velocity * dt
+    end,
+
+    checkCrash = function(self)
+        for i = 1, #Bodies do
+            local body = Bodies[i]
+            if body ~= self then
+                local distance = (body.position - self.position):len()
+                if distance < body.size then
+                    Game.reason = "Crashed"
+                    Game.gameover = true
+                end
+            end
+        end
     end,
 
     thrustForward = function(self, dt)
